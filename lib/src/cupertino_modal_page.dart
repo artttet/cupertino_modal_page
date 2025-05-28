@@ -25,13 +25,15 @@ class CupertinoModalPageState extends State<CupertinoModalPage> with SingleTicke
     super.initState();
     _controller = AnimationController(vsync: this, duration: _backTransitionDuration, reverseDuration: _backTransitionDuration);
     _radiusAnimation = Tween<double>(begin: 0.0, end: 10.0).animate(CurvedAnimation(parent: _controller, curve: _transitionCurve));
-    _openedNotifier = ValueNotifier<bool>(false)..addListener(() {
-      if (_openedNotifier.value == true) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    });
+    _openedNotifier = ValueNotifier<bool>(false)..addListener(_openedNotifierListener);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _openedNotifier.removeListener(_openedNotifierListener);
+    _openedNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,6 +61,14 @@ class CupertinoModalPageState extends State<CupertinoModalPage> with SingleTicke
         child: widget.child,
       ),
     );
+  }
+
+  void _openedNotifierListener() {
+    if (_openedNotifier.value == true) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
   }
 
   Future<T?> show<T>(BuildContext context, WidgetBuilder builder) async {
