@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cupertino_modal_page/cupertino_modal_page.dart';
 
+final CupertinoModalPageController controller = CupertinoModalPageController();
+
 void main() {
   runApp(const MainApp());
 }
@@ -11,8 +13,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const CupertinoModalPage(
-        child: MainPage(),
+      home: CupertinoModalPage(
+        controller: controller,
+        child: const MainPage(),
       ),
     );
   }
@@ -27,7 +30,7 @@ class MainPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            showCupetinoModalPage(context, (context) => const SecondPage());
+            controller.show((context) => const SecondPage());
           },
           child: const Text('Открыть модальный экран'),
         ),
